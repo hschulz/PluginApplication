@@ -4,11 +4,7 @@ package haschlabs.pluginapplication;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import haschlabs.pluginmanager.PluginLoader;
 import haschlabs.pluginapplication.api.plugin.SpecificPlugin;
-import haschlabs.pluginmanager.interfaces.PluginManager;
 
 /**
  *
@@ -34,21 +30,22 @@ public class PluginApplication {
             }
         }
 
-        ImplPluginLoader loader = new ImplPluginLoadler(pluginFolder);
+        ImplPluginLoader loader = new ImplPluginLoader(pluginFolder);
 
         try {
             plugins = loader.loadPlugins();
-        } catch (IOException ex) {
-            Logger.getLogger(PluginApplication.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            return;
         }
 
-        PluginManager manager = new ImplPluginManager();
+        ImplPluginManager manager = new ImplPluginManager();
 
         for (SpecificPlugin p : plugins) {
-
-            System.out.println("--- Plugin ---");
             p.setPluginManager(manager);
             p.start();
+
+            System.out.println("--- Plugin ---");
             System.out.println("Name: " + p.getName());
             System.out.println("Description: " + p.getDescription());
             System.out.println("Version: " + p.getVersion());
